@@ -43,7 +43,7 @@ Tautology.Geometry.prototype.updateGeom = function(){
 }
 
 Tautology.Geometry.prototype.initGeom = function(){
-	var shape = Object.values(this.param.shape);
+	var shape = this.param.shape;
 	this.param.array = Array.permute(shape);
 
 	// This part is suggested to be moved to a class dedicated to handle the
@@ -51,16 +51,13 @@ Tautology.Geometry.prototype.initGeom = function(){
 	var regions = this.param.regions,
 		modifiers = this.param.regionModifiers;
 
-	for (key in regions) {
-		regions[key] = {desc : regions[key]};
-		regions[key]['index'] = this.param.array.findRegionIndex(shape, regions[key].desc, modifiers);
-		regions[key]['dimIndex'] = regions[key].desc.cases(modifiers, shape);
-	}
+	regions.getDimensionTables(shape);
+	regions.compile(this.param.array, shape);
 	
 	var transforms = this.param.transforms;
 	for (key in transforms) {
 		if(transforms[key].affectedDimension != undefined){
-			transforms[key]['dimIndex'] = regions[transforms[key].affectedRegion].dimIndex[transforms[key].affectedDimension];
+			transforms[key]['dimIndex'] = regions.dimensionTables[transforms[key].affectedRegion][transforms[key].affectedDimension];
 			transforms[key]['matrices'] = Array.constDeep(transforms[key]['dimIndex'].length, THREE.Matrix4);
 		}
 	}
@@ -68,7 +65,7 @@ Tautology.Geometry.prototype.initGeom = function(){
 	this.geom = new THREE.Geometry();
 	this.geom.vertices = this.param.array.map(function(e){return new THREE.Vector3()});
 	
-	this.geom.faces = Array.grid(Object.values(this.param.shape));
+	this.geom.faces = Array.grid(shape);
 	this.geom.faceVertexUvs = this.param.array.map(function(e){return new THREE.Vector2()})
 
 

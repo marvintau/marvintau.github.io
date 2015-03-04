@@ -5,7 +5,7 @@ Tautology.Regions = function(specs){
 		{	// if undefined on that slot, return true
 			case : function(ithSpec){ return !ithSpec },	
 			is : function(){ return 1; },
-			do : function(ithSpec, ithShape){console.log(Array.range(ithShape)); return Array.range(ithShape)}
+			do : function(ithSpec, ithShape){return Array.range(ithShape)}
 		},
 		{	// Accepts {start: , end: , every : , shift : ,}
 			case : function(ithSpec){ return ithSpec && ithSpec.start },
@@ -33,22 +33,42 @@ Tautology.Regions = function(specs){
 
 Tautology.Regions.prototype.constructor = Tautology.Regions;
 
-Tautology.Regions.prototype.getIndexTable = function(indexArray){
-	var compiledRegions = {};
+Tautology.Regions.prototype.getDimensionTables = function(shape){
+	this.dimensionTables = {};
 
-	var matchIndex = function(index, shape, spec){
-		return index.every(function(dim, i){
-			return this.modifiers.some(function(crit){
-				return crit.case(spec[i]) && crit.is(dim, spec[i], shape[i]);
-			})
+	for (spec in this.specs){
+		this.dimensionTables[spec] = this.specs[spec].map(function(ithSpec, ith){
+			for (var i = this.modifiers.length - 1; i >= 0; i--) {
+				if (this.modifiers[i].case(ithSpec)) {
+					return this.modifiers[i].do(ithSpec, shape[ith]);
+				}
+			};
+			return [];
 		}.bind(this));
 	}
+	return 0;
+}
 
+Tautology.Regions.prototype.compile = function(indexArray, shape){
+	this.compiled = {};
 
-
-	for (key in regions) {
-		compiledRegions[key] = indexArray.findRegionIndex(shape, regions[key], modifiers);
+	var matchIndex = function(index, shape, spec, modifiers){
+		return index.every(function(dim, i){
+			return modifiers.some(function(modifier){
+				return modifier.case(spec[i]) && modifier.is(dim, spec[i], shape[i]);
+			});
+		});
 	}
 
-	return compiledRegions;
+	for (var i = indexArray.length - 1; i >= 0; i--) {
+		for (spec in this.specs){
+			if (matchIndex(indexArray[i], shape, this.specs[spec], this.modifiers)){
+				if (this.compiled[spec]) {
+					this.compiled[spec].push(i)
+				} else {
+					this.compiled[spec] = [i];
+				}
+			}
+		}
+	};
 }
