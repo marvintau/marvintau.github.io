@@ -45,11 +45,23 @@ Tautology.Geometry.prototype.init = function(){
 	var shape = Object.values(this.param.shape);
 	this.param.array = Array.permute(shape);
 
+	// This part is suggested to be moved to a class dedicated to handle the
+	// model specification
 	var regions = this.param.regions,
 		modifiers = this.param.regionModifiers;
 
 	for (key in regions) {
-		regions[key] = this.param.array.findRegionIndex(shape, regions[key], modifiers);
+		regions[key] = {desc : regions[key]};
+		regions[key]['index'] = this.param.array.findRegionIndex(shape, regions[key].desc, modifiers);
+		regions[key]['dimIndex'] = regions[key].desc.cases(modifiers, shape);
+	}
+	
+	var transforms = this.param.transforms;
+	for (key in transforms) {
+		if(transforms[key].affectedDimension != undefined){
+			transforms[key]['dimIndex'] = regions[transforms[key].affectedRegion].dimIndex[transforms[key].affectedDimension];
+			transforms[key]['matrices'] = Array.constDeep(transforms[key]['dimIndex'].length, THREE.Matrix4);
+		}
 	}
 
 	this.geom = new THREE.Geometry();

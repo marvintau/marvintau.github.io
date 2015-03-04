@@ -5,6 +5,8 @@
 // Some very handy Array/List manipulating functions which are
 // very familiar in other popular FP languages. I LOVE FP.
 
+function r(i, r){ return (i >= 0) ? (i - 1) : (r + i);};
+
 function sq(x){
 	return x*x;
 }
@@ -19,9 +21,10 @@ function bezier(a, b, c, d, t){
 }
 
 /**
- * const generates a array with specific length
- * and constant object, which can be further 
- * modified.
+ * const generates a array with specific length and constant
+ * object, which can be further modified. Since only the
+ * reference of object is returned, this function should be
+ * used only when generating the data with fundamental type.
  * 
  * @param  {Number} n    Length of the array to be generated
  * @param  {Object} func copy of new element
@@ -32,6 +35,20 @@ Array.const = function(n, element){
     return Array.apply(null, new Array(n)).map(function(){
     	return element;
     });
+}
+
+/**
+ * constDeep generates array with specific length with
+ * new object copies, since the function above would only
+ * copy the reference of objects.
+ * @param  {[type]} n           [description]
+ * @param  {[type]} Constructor [description]
+ * @return {[type]}             [description]
+ */
+Array.constDeep = function(n, Constructor){
+	return Array.apply(null, new Array(n)).map(function(){
+		return new Constructor();
+	});
 }
 
 /**
@@ -147,7 +164,7 @@ Array.prototype.transpose = function(){
 Array.prototype.checkRegionIndex = function(shape, regionSpec, regionModifiers){
 	return this.every(function(dim, i){
 		return regionModifiers.some(function(crit){
-			return crit.typeCond(regionSpec[i]) && crit.cond(dim, regionSpec[i], shape[i]);
+			return crit.case(regionSpec[i]) && crit.is(dim, regionSpec[i], shape[i]);
 		})
 	});
 }
@@ -156,6 +173,27 @@ Array.prototype.findRegionIndex = function(shape, regionSpec, regionModifiers){
 	return this.map(function(tauIndex, index){ return {tau: tauIndex, i: index}; })
 			   .filter(function(elem){ return elem.tau.checkRegionIndex(shape, regionSpec, regionModifiers); })
 			   .map(function(e){return e.i});
+}
+
+/**
+ * cases walks through the whole array to check whether the
+ * current element meets the criterion in conds. If the ith
+ * criterion is met, then returns the value after applying
+ * the ith function to this element.
+ * Notably, the conditions are supposed to be mutual exclusive.
+ * However, the function doesn't check the mutex, and applies
+ * the first satisfying criterion and corresponding function.
+ * @param  {[type]} conds [description]
+ * @param  {[type]} funcs [description]
+ * @return {[type]}       [description]
+ */
+Array.prototype.cases = function(caseTable, shape){
+	return this.map(function(e, ei){
+		for (var i = caseTable.length - 1; i >= 0; i--) {
+			if (caseTable[i].case(e)) return caseTable[i].do(e, shape[ei]);
+		};
+		return 0;
+	})
 }
 
 /**
@@ -198,8 +236,4 @@ THREE.Vector3.prototype.roll = function(n, m){
 
 Object.values = function(obj){
 	return Object.keys(obj).map(function(e){return obj[e]});
-}
-
-Object.findIndex = function(obj, prop){
-	return 
 }
