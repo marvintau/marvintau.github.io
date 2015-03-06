@@ -4,6 +4,3 @@ Tautology.Manuever = function(manuever){
 
 Tautology.Manuever.prototype.constructor = Tautology.Manuever;
 
-Tautology.Manuever.prototype.initManuever = function(){
-	
-}
