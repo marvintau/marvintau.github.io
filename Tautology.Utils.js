@@ -5,21 +5,6 @@
 // Some very handy Array/List manipulating functions which are
 // very familiar in other popular FP languages. I LOVE FP.
 
-function r(i, r){ return (i >= 0) ? (i - 1) : (r + i);};
-
-function sq(x){
-	return x*x;
-}
-
-function bezier(a, b, c, d, t){
-	var trsq = sq( 1 - t ),
-		tsq = sq( t );
-	return a * trsq * ( 1 - t ) +
-		   b * 3 * trsq *t +
-		   c * 3 * tsq * ( 1 - t ) +
-		   d * tsq * t 
-}
-
 /**
  * const generates a array with specific length and constant
  * object, which can be further modified. Since only the
@@ -75,12 +60,6 @@ Array.prototype.outer = function(another, func){
 	})
 }
 
-/**
- * Permute generates the sparse-array-like indices with given
- * dimensions (a.k.a. shape).
- * @param  {Array} shape Given dimensions
- * @return {Array}       Array of indices
- */
 
 /**
  * Mesh generates an index array with hierarchical structure, that represents
@@ -175,6 +154,42 @@ Array.prototype.tail = function(){
 	x.push(x.shift());
 	return [this[0], x.reverse()];
 }
+
+Array.prototype.last = function(){
+	return this[this.length-1];
+}
+
+Array.prototype.accum = function() {
+	//Accumulate from a new array [0] and then remove the first element.
+	return this.reduce(function(a, b){return a.concat(a.last()+b)},[0]).slice(1);
+};
+
+Array.prototype.accumUpdate = function(){
+	for (var i = 1; i < this.length; i++){
+		this[i] += this[i-1];
+	}
+}
+
+Array.prototype.constUpdate = function(n){
+	for (var i = 0; i < this.length; i++){
+		this[i] = n;
+	}	
+}
+
+/**
+ * Apply to monotone ascending numerical array
+ * @return {[type]} [description]
+ */
+Array.prototype.normalize = function(){
+	var first = this[0];
+	var range = this[this.length-1] - this[0];
+
+	for (var i = this.length - 1; i >= 0; i--) {
+		this[i] = ( this[i] - this[0] ) / range;
+	};
+}
+
+// Array.prototype.
 
 /**
  * An instance method that returns a new array that combines
