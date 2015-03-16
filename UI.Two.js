@@ -5,7 +5,7 @@
 UI.Two = function(elementName, width, height){
 	this.patterns = {};
 
-	if(width) {
+	if(width) {	
 		this.canvas = new fabric.Canvas(elementName , {
 			'width' : width,
 			'height': height
@@ -14,7 +14,7 @@ UI.Two = function(elementName, width, height){
 	} else {
 		var width = $('#'+elementName).width(),
 			height = $('#'+elementName).height();
-
+			
 		this.canvas = new fabric.Canvas(elementName , {
 			'width' : width,
 			'height': height
@@ -24,6 +24,7 @@ UI.Two = function(elementName, width, height){
 
 
 	
+
 	$('.canvas-container').ruler({
 		showCrosshair : false
 	});

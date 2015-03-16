@@ -1,6 +1,6 @@
 #!/bin/bash
 
-nodejs uglify-js ./Tautology/Tautology.js \
+uglifyjs ./Tautology/Tautology.js \
          ./Tautology/Tautology.Utils.js \
          ./Tautology/Tautology.Range.js \
          ./Tautology/Tautology.Region.js \
