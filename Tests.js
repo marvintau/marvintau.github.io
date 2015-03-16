@@ -15,7 +15,7 @@ var addSlider = function(parameter, params, id){
 		}).on('input change', function(e){
 			params[parameter]['val'] = $(this).val()/2000;
 			model.geom.update();
-		}).before('<br>').before(parameter);
+		}).wrap('<li>');
 }
 
 var addSliders = function(params, id){
@@ -26,6 +26,8 @@ var addSliders = function(params, id){
 
 
 model.updateScene(three.scene);
+
+addSliders(model.geom.param, 'parameters');
 
 //Loads the correct sidebar on window load,
 //collapses the sidebar on window resize.

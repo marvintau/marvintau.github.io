@@ -21,6 +21,10 @@ canvas {
   height: 100%
 }
 
+#two-viewport {
+  height : 350px;
+}
+
 #three-viewport {
   height: 350px;
 }
