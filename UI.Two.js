@@ -2,41 +2,48 @@
  * Canvas integrates the styling and some interactive operation on the 2D drawing area 
  * @param {} divElementID
  */
-Tautology.Canvas = function(elementName, width, height){
+UI.Two = function(elementName, width, height){
 	this.patterns = {};
 
-	$('#'+elementName).attr({'width': width, 'height': height}).css({'width':width, 'height':height});
+	if(width) {
+		this.canvas = new fabric.Canvas(elementName , {
+			'width' : width,
+			'height': height
+		});
+		this.resize(width, height);
+	} else {
+		var width = $('#'+elementName).width(),
+			height = $('#'+elementName).height();
 
-	this.canvas = new fabric.Canvas(elementName , {
-		'width' : width,
-		'height': height
-	});
+		this.canvas = new fabric.Canvas(elementName , {
+			'width' : width,
+			'height': height
+		});
+		this.resize(width, height);		
+	}
 
-	this.resize(width, height);
 
-	// the div element with class canvas-container is automatically generated
-	// and automatically wrapped outside the original canvas element.
+	
 	$('.canvas-container').ruler({
 		showCrosshair : false
 	});
+
+	// $('.canvas-container').css({'padding' : 0, 'position' : 'absolute'});
 
 	this.canvas.add(new fabric.Circle({
 		radius: 20, fill: 'green', left: 100, top: 100
 	}));
 
-	// this.makePatterns();
-
-
 };
 
-Tautology.Canvas.prototype.constructor = Tautology.Canvas;
+UI.Two.prototype.constructor = UI.Two;
 
 /**
  * resize the canvas according to the resizing of geometric model 
  * @param  {Number} width
  * @param  {Number} height
  */
-Tautology.Canvas.prototype.resize = function(width, height){
+UI.Two.prototype.resize = function(width, height){
     this.canvas.setWidth(width);
     this.canvas.setHeight(height);
 
@@ -47,47 +54,19 @@ Tautology.Canvas.prototype.resize = function(width, height){
 
 	this.canvas.backgroundColor = 'rgba(255,255,255, 1)';
 
-	// $('.vRule').css({'height': height + 'px'});
-
 	this.canvas.renderAll();
 
 };
 
 /**
- * resize width individually
- * @param  {Number} width
- */
-Tautology.Canvas.prototype.resizeWidth = function(width){
-	this.canvas.setWidth(width);
-	var c = this.canvas.getElement();
-	c.setAttribute('width', width*window.devicePixelRatio);
-	c.getContext('2d').scale(window.devicePixelRatio, window.devicePixelRatio);		
-};
-
-/**
- * resize height individually
- * @param  {Number} height
- */
-Tautology.Canvas.prototype.resizeHeight = function(height){
-	this.canvas.setHeight(height);
-	var c = this.canvas.getElement();
-	c.setAttribute('width', width*window.devicePixelRatio);
-	c.getContext('2d').scale(window.devicePixelRatio, window.devicePixelRatio);		
-};
-
-
-/**
  * add image to canvas
  * @param {String} url
  */
-Tautology.Canvas.prototype.addImage = function(url){
+UI.Two.prototype.addImage = function(url){
     fabric.Image.fromURL(url, function(img) {
 	    if(img.height > this.canvas.height){
 	        img.scale(img.height/this.canvas.height * 0.1);
 	    }
-	    img.on('selected', function(e){
-	    	console.log(this);
-	    })
 	    this.canvas.add(img);
     }.bind(this)); 
 };
@@ -97,7 +76,7 @@ Tautology.Canvas.prototype.addImage = function(url){
  * @param {String} text to be input
  * @param {Array} style a list of styles regarding text
  */
-Tautology.Canvas.prototype.addText = function(text, style, kerning){
+UI.Two.prototype.addText = function(text, style, kerning){
 	var style_str = style.split(' ');
 	if (text.length != 0){
 		var textArray = text.split('').map(function(c){
@@ -121,7 +100,7 @@ Tautology.Canvas.prototype.addText = function(text, style, kerning){
  * create patterns on the canvas and further mapped on the 3D model
  * @return {[type]}
  */
-Tautology.Canvas.prototype.makePatterns = function(){
+UI.Two.prototype.makePatterns = function(){
 	var dotList = [];
 		
 	for(var i = 0; i < Math.floor($('#viewContainer').width()/50); i++){
@@ -172,14 +151,14 @@ Tautology.Canvas.prototype.makePatterns = function(){
  * update pattern
  * @param  {Number} pattern pattern index
  */
-Tautology.Canvas.prototype.updatePattern = function(pattern){
+UI.Two.prototype.updatePattern = function(pattern){
 	this.canvas.add(this.patterns[pattern]);
 };
 
 /**
  * remove selected object from the canvas
  */
-Tautology.Canvas.prototype.removeSelectedObject = function(){
+UI.Two.prototype.removeSelectedObject = function(){
     if(this.canvas.getActiveObject() == null){
         this.canvas.getActiveGroup().forEachObject(function(o){ this.canvas.remove(o) });
         this.canvas.discardActiveGroup().renderAll();
@@ -192,6 +171,6 @@ Tautology.Canvas.prototype.removeSelectedObject = function(){
 /**
  * remove everything
  */
-Tautology.Canvas.prototype.removeAll = function(){
+UI.Two.prototype.removeAll = function(){
 	this.canvas.clear();
 };

@@ -1,4 +1,4 @@
-Tautology.Three = function(demoName, width, height){
+UI.Three = function(demoName, width, height){
 	this.materials;
 	this.ctrl;
 	this.rndr;
@@ -8,9 +8,9 @@ Tautology.Three = function(demoName, width, height){
 	this.init(demoName, width, height);
 }
 
-Tautology.Three.prototype.constructor = Tautology.Three;
+UI.Three.prototype.constructor = UI.Three;
 
-Tautology.Three.prototype.initControl = function(demoName){
+UI.Three.prototype.initControl = function(demoName){
 	this.ctrl = new THREE.TrackballControls(this.camera, $("#"+demoName).get(0));
 	this.ctrl.rotateSpeed = 1.0;
 	this.ctrl.zoomSpeed = 1.2;
@@ -22,7 +22,15 @@ Tautology.Three.prototype.initControl = function(demoName){
 	this.ctrl.dynamicDampingFactor = 0.3;	
 };
 
-Tautology.Three.prototype.initRenderer = function(demoName, width, height){
+UI.Three.prototype.resetControl = function(){
+	new TWEEN.Tween( camera.position ).to( {
+	        x: 0,
+	        y: 0,
+	        z: 200}, 600 )
+	    .easing( TWEEN.Easing.Sinusoidal.EaseInOut).start();
+}
+
+UI.Three.prototype.initRenderer = function(demoName, width, height){
 	this.rndr = new THREE.WebGLRenderer({
 		alpha:true,
 		antialias: true
@@ -34,9 +42,9 @@ Tautology.Three.prototype.initRenderer = function(demoName, width, height){
 	this.rndr.setClearColor( 0xfafafa, 1);
 }
 
-Tautology.Three.prototype.initScene = function(){
-	this.camera = new THREE.PerspectiveCamera( 30, 512 / 256, 1, 1000 );
-	this.camera.position.set(0, 0, 100);
+UI.Three.prototype.initScene = function(width, height){
+	this.camera = new THREE.PerspectiveCamera( 20, width / height, 10, 1000 );
+	this.camera.position.set(0, 0, 200);
 
 	var light = new THREE.DirectionalLight( 0xe0e0e0, 1 );
     	light.position = this.camera.position;
@@ -48,11 +56,11 @@ Tautology.Three.prototype.initScene = function(){
 
 }
 
-Tautology.Three.prototype.render = function(){
+UI.Three.prototype.render = function(){
 	this.rndr.render(this.scene, this.camera);
 }
 
-Tautology.Three.prototype.animate = function(){
+UI.Three.prototype.animate = function(){
 	var that = this;
 	requestAnimationFrame(function(){
 		that.animate();
@@ -61,10 +69,20 @@ Tautology.Three.prototype.animate = function(){
     });	
 }
 
-Tautology.Three.prototype.init = function(demoName, width, height) {
-	this.initScene();
-	this.initRenderer(demoName, width, height);
-	this.initControl(demoName);
+UI.Three.prototype.init = function(demoName, width, height) {
+	if(width){
+		this.initScene(width, height);
+		this.initRenderer(demoName, width, height);
+		this.initControl(demoName, width, height);
+
+	} else {
+		var width = $('#'+demoName).width(),
+			height = $('#'+demoName).height();
+		this.initScene(width, height);
+		this.initRenderer(demoName, width, height);
+		this.initControl(demoName, width, height);
+	}
+
 	
 	this.render();
 	this.animate();
