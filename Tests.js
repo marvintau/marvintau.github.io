@@ -4,63 +4,52 @@ model = new Tautology.Model(BendyStraw,draw.canvas);
 
 three = new UI.Three(BendyStraw.demoName);
 
-// var addCollpsableFolder = function()
-
-
-var addSlider = function(name, params, containerID){
-	$('<input type="range">').appendTo($('#'+containerID))
-		.attr({
-			id: name,
-			min:params[name]['min']*2000,
-			max:params[name]['max']*2000,
-			value:params[name]['val']*2000
-		}).on('input change', function(e){
-			params[name]['val'] = $(this).val()/2000;
-			model.geom.update();
-		}).wrap('<li>').before(name);
+var picker = function(containerID, changedParam, who_updates){
+    $('<li>').appendTo($('#'+containerID)).append($('<a id='+changedParam.name+'-color href=# class=btn btn-primary cp-background>'+changedParam.name+'</a>'));
+    $('#'+changedParam.name+'-color').colorPicker({
+        colorformat : '0x',
+        alignment : 'br',
+        onSelect : function(ui, color){
+            changedParam.val = color;
+            who_updates.update();
+        }
+    });
 }
 
-var addSliders = function(params, id){
+var slider = function(containerID, changedParam, who_updates){
+	$('<li>').appendTo($('#'+containerID)).append(
+        '<div class="input-group input-group-html5">'+
+            '<span class="input-group-addon">'+changedParam.name+'</span>'+
+            '<span class="input-group-addon addon-range">'+
+            '<input type="range" id="'+changedParam.name+'-range" name="'+changedParam.name+'-range" min="'+changedParam.min*2000+'" max="'+changedParam.max*2000+'" value="'+changedParam.val*2000+'"></span>'+
+            '<input type="text" id="'+changedParam.name+'-text" class="form-control" name="'+changedParam.name+'-text">'+
+        '</div>');
+
+    $('#'+changedParam.name+'-text').val($('#'+changedParam.name+'-range').val()/2000);
+
+    $('#'+changedParam.name+'-text').on('change', function(){
+        $('#'+changedParam.name+'-range').val(this.value*2000);
+        who_updates.update();
+    })
+
+    $('#'+changedParam.name+'-range').on('input change', function(){
+        $('#'+changedParam.name+'-text').val(this.value/2000);
+        changedParam.val = this.value/2000;
+        who_updates.update();
+    })
+}
+
+var addSliders = function(containerID, params, who_updates){
 	Object.keys(params)
-		.filter(function(p){return params[p]['val']})
-		.forEach(function(p){addSlider(p, params, id)});
+		.forEach(function(p){
+            console.log(params[p]);
+            if(params[p].type)
+                this[params[p].type](containerID, params[p], who_updates);
+        });
 }
 
 
 model.updateScene(three.scene);
-
-addSliders(model.geom.param, 'parameters');
-
-//Loads the correct sidebar on window load,
-//collapses the sidebar on window resize.
-// Sets the min-height of #page-wrapper to window size
-$(function() {
-    $(window).bind("load resize", function() {
-        topOffset = 50;
-        width = (this.window.innerWidth > 0) ? this.window.innerWidth : this.screen.width;
-        if (width < 768) {
-            $('div.navbar-collapse').addClass('collapse');
-            topOffset = 100; // 2-row-menu
-        } else {
-            $('div.navbar-collapse').removeClass('collapse');
-        }
-
-        height = ((this.window.innerHeight > 0) ? this.window.innerHeight : this.screen.height) - 1;
-        height = height - topOffset;
-        if (height < 1) height = 1;
-        if (height > topOffset) {
-            $("#page-wrapper").css("min-height", (height) + "px");
-        }
-    });
-
-    var url = window.location;
-    var element = $('ul.nav a').filter(function() {
-        return this.href == url || url.href.indexOf(this.href) == 0;
-    }).addClass('active').parent().parent().addClass('in').parent();
-    if (element.is('li')) {
-        element.addClass('active');
-    }
-});
-
-$("#demo-rating").change(function(){ $("#demo-rating-source").val(this.value)} );
-$("#demo-rating-source").on('input change', function(){ $("#demo-rating").val(this.value)} );
+// $(document).
+addSliders('parameters', model.geom.param, model.geom);
+addSliders('parameters', model.material.param, model.material);
