@@ -88,26 +88,26 @@ UI.Controller.prototype.imageInput = function(containerID){
                         '<h4 class="modal-title" id="myLargeModalLabel">是的，图片们都在这里了</h4>'+
                     '</div>'+
                     '<div class="modal-body">'+
-	                        '<a href=# class="select"><img src="./126543l.jpg"></a>'+
-							'<a href=# class="select"><img src="./128618l.jpg"></a>'+
-							'<a href=# class="select"><img src="./136024l.jpg"></a>'+
-							'<a href=# class="select"><img src="./127745l.jpg"></a>'+
-							'<a href=# class="select"><img src="./132919l.jpg"></a>'+
-							'<a href=# class="select"><img src="./133976l.jpg"></a>'+
-							'<a href=# class="select"><img src="./126347l.jpg"></a>'+
-							'<a href=# class="select"><img src="./128638l.jpg"></a>'+
-							'<a href=# class="select"><img src="./130091l.jpg"></a>'+
-							'<a href=# class="select"><img src="./132687l.jpg"></a>'+
-							'<a href=# class="select"><img src="./128665l.jpg"></a>'+
-							'<a href=# class="select"><img src="./132899l.jpg"></a>'+
-							'<a href=# class="select"><img src="./132882l.jpg"></a>'+
-							'<a href=# class="select"><img src="./132729l.jpg"></a>'+
-							'<a href=# class="select"><img src="./132852l.jpg"></a>'+
-							'<a href=# class="select"><img src="./129980l.jpg"></a>'+
-							'<a href=# class="select"><img src="./129542l.jpg"></a>'+
-							'<a href=# class="select"><img src="./137747l.jpg"></a>'+
-							'<a href=# class="select"><img src="./129859l.jpg"></a>'+
-							'<a href=# class="select"><img src="./131406l.jpg"></a>'+
+	                        '<a href=# class="select"><img src="./images/126543l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/128618l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/136024l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/127745l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/132919l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/133976l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/126347l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/128638l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/130091l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/132687l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/128665l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/132899l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/132882l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/132729l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/132852l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/129980l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/129542l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/137747l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/129859l.jpg"></a>'+
+							'<a href=# class="select"><img src="./images/131406l.jpg"></a>'+
                     '</div>'+
                 '</div>'
             )
