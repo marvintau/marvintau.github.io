@@ -1,0 +1,126 @@
+
+/*!
+ * Marvin basic settting
+ */
+body {
+  background-color: #f0f0f0;
+}
+html, body {
+  height: 100%;
+}
+.fill-height {
+  min-height: 100%;
+  height:auto !important; /* cross-browser */
+  height: 100%; /* cross-browser */
+}
+
+ul {
+  list-style-type: none;
+}
+
+li {
+  padding-bottom: 10px;
+}
+
+canvas {
+  left: 0;
+  top: 0;
+  position: relative;
+  width: 100%;
+  height: 100%
+}
+
+#two-viewport {
+  height : 350px;
+}
+
+#three-viewport {
+  height: 350px;
+}
+
+input[type=range] {
+  /*display: block;*/
+  margin-left: 30px;
+  /*padding-left: 30px;*/
+  width: 40%;
+}
+
+.wrapper {
+  padding-left: 300px; /* Define design area position, compare to left sidebar */
+
+}
+.page-wrapper {
+  width: 100%;
+  padding: 10px;
+}
+
+.side-nav-left {
+  position: fixed;
+  left: 300px;
+  width: 300px;
+  margin-left: -300px;
+  border: none;
+  border-radius: 0;
+  overflow-y: auto;
+}
+
+.side-nav-left>li>a {
+  width: 300px;
+}
+
+.side-nav-left li a:hover,
+.side-nav-left li a:focus {
+  font-weight: bold;
+}
+
+.side-nav-left>li>a {
+}
+
+.panel-second-list>ul {
+  padding-left: 15px;
+}
+
+.panel-second-list>ul>li {
+}
+
+.panel-second-list>ul>li>a {
+  display: block;
+  padding: 10px 15px 10px 30px;
+  text-decoration: none;
+}
+
+.panel-second-list>ul>li>a:hover {
+  font-weight: bold;
+}
+
+.panel-third-list>ul {
+  padding: 0;
+}
+
+.panel-third-list>ul>li {
+  padding: 0;
+  border-bottom: 1px solid #303030;
+}
+
+.panel-third-list>ul>li>a {
+  display: block;
+  padding: 10px 15px 10px 15px;
+  text-decoration: none;
+  color: #9d9d9d; /* third level text color */
+}
+
+.side-nav-left .navbar-collapse {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+.form-control-enter-text {
+  width: 100%;
+}
+
+.side-nav-left .arrow {
+  float: right;
+}
+.side-nav-left .fa.arrow:before {
+  content: "\f104";
+}

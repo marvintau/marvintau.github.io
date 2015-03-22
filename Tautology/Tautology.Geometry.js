@@ -9,12 +9,8 @@
  * @param {Array}  codes  The list of operations that will seuqentially
  *                        applied on the objects.
  */
-Tautology.Geometry = function(param, shape, regions, manuever){
-	this.param = param;
-
-	this.shape = shape;
-
-	this.labels = this.shape.reduce(function(perms, dim){
+Tautology.Geometry = function(model){
+	this.labels = model.shape.reduce(function(perms, dim){
 		return Array.range(dim).outer(perms, function(d, perm){
 			return perm.concat(d);
 		}).flatten();
@@ -24,26 +20,28 @@ Tautology.Geometry = function(param, shape, regions, manuever){
 
 	this.texels = this.labels.map(function(e){return new THREE.Vector2()});
 
-	this.faces = Array.grid(this.shape);
+	this.faces = Array.grid(model.shape);
 
 	this.regions = {};
-	for(key in regions){
-		this.regions[key] = new Tautology.Region(regions[key], this.shape);
+	for(key in model.regions){
+		this.regions[key] = new Tautology.Region(model.regions[key], model.shape);
 	}
 
 	this.instructions = [];
-	
-	manuever.forEach(function(step){
-		this.instructions.push(new Tautology.Transform(this, step));
+
+	model.manuever.forEach(function(step){
+		this.instructions.push(new Tautology.Transform(this, model, step));
 	}.bind(this));
 
-	this.initGeom(this.shape);
-	this.updateGeom();
+	this.init();
+	this.update();
 }
 
 Tautology.Geometry.prototype.constructor = Tautology.Geometry;
 
-Tautology.Geometry.prototype.initGeom = function(){
+Tautology.Geometry.prototype.init = function(){
+	this.geom && this.geom.dispose();
+
 	this.geom = new THREE.Geometry();
 	this.geom.vertices = this.vertices;
 	this.geom.faces = this.faces;
@@ -54,7 +52,7 @@ Tautology.Geometry.prototype.initGeom = function(){
 
 }
 
-Tautology.Geometry.prototype.updateGeom = function(){
+Tautology.Geometry.prototype.update = function(){
 
 	this.vertices.forEach(function(e){
 		e.set(0, 0, 0);

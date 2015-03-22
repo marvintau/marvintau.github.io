@@ -1,10 +1,11 @@
-Tautology.Transform = function(geom, transSpec){
-	this.param = geom.param;
-	this.shape = geom.shape;
+Tautology.Transform = function(geom, model, transSpec){
 	this.labels = geom.labels;
 	this.vertices = geom.vertices;
 	this.texels = geom.texels;
 	this.indices = geom.regions[transSpec.region].table;
+
+	this.param = model.param;
+	this.shape = model.shape;
 
 	this[transSpec.command](transSpec.callback, transSpec.dimension);
 };
@@ -23,6 +24,20 @@ Tautology.Transform.prototype.tran = function(settingCallback){
 		}.bind(this));
 	}
 };
+
+Tautology.Transform.prototype.rot = function(settingCallback){
+
+	this.r = new THREE.Quaternion();
+	this.settingCallback = settingCallback;
+
+	this.update = function(){
+		this.indices.forEach(function(i){
+			this.settingCallback.call(this);
+			this.vertices[i].applyQuaternion(this.r);
+		}.bind(this));
+	}
+};
+
 
 Tautology.Transform.prototype.radiate = function(settingCallback,dimension){
 	this.v = new THREE.Vector3();
@@ -68,7 +83,6 @@ Tautology.Transform.prototype.bend = function(settingCallback,dimension){
 }
 
 Tautology.Transform.prototype.uniformRemap = function(settingCallback, dimension){
-	this.step = 0;
 	this.dim = dimension;
 	this.settingCallback = settingCallback;
 
